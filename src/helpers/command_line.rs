@@ -32,6 +32,46 @@ impl PrintCommand {
         stdout.execute(ResetColor).unwrap();
     }
 }
+// get user response that code is safe to execute
+pub fn confirm_safe_code() -> bool {
+    
+    let mut stdout: std::io::Stdout = stdout();
+    loop {
+        stdout.execute( SetForegroundColor(Color::DarkYellow) ).unwrap();
+        println!("WARNING: You are about to run code written entirely by AI.");
+        println!("Review your code and confirm that you wish to continue.");
+
+        stdout.execute(ResetColor).unwrap();
+
+        stdout.execute( SetForegroundColor(Color::Green) ).unwrap();
+
+        println!("[1] All Good");
+
+        stdout.execute( SetForegroundColor(Color::Red) ).unwrap();
+
+        println!("[2] Lets stop this project");
+
+        stdout.execute(ResetColor);
+
+        let mut human_response : String = String::new();
+
+        stdin()
+            .read_line( &mut human_response )
+            .expect( "Failed to read response");
+
+        let human_response = human_response.trim().to_lowercase();
+
+        match human_response.as_str() {
+            
+            "1" | "ok" | "y" | "yes" => return true,
+            "2" | "no" | "n" => return false,
+            _ => {
+                println!("Invalid input, please select [1] or [2]");
+            }
+        }
+
+    }
+}
 
 #[cfg(test)]
 mod tests {

@@ -4,10 +4,13 @@ use crate::models::general::llm::Message;
 use reqwest::Client;
 use serde::de::DeserializeOwned;
 use std::fs;
+use regex::Regex;
 
 const CODE_TEMPLATE_PATH: &str = "/home/ubuntu/rust_autogpt/web_template/src/code_template.rs";
+pub const WEB_SERVER_PROJECT_PATH: &str = "/home/ubuntu/rust_autogpt/web_template/";
 const EXEC_MAIN_PATH: &str = "/home/ubuntu/rust_autogpt/web_template/src/main.rs";
 const API_SCHEMA_PATH: &str = "/home/ubuntu/rust_autogpt/auto_gippity/schemas/api_schema.json";
+
 
 // Extend ai function to encourage specific output
 pub fn extend_ai_function(ai_func: fn(&str) -> &'static str, func_input: &str) -> Message {
@@ -45,6 +48,22 @@ pub async fn ai_task_request_decoded<T: DeserializeOwned>(
     return decoded_response;
 }
 
+// get ai response without markdown code wrapper
+pub async fn ai_task_request_without_markdown(
+    msg_context: String,
+    agent_position: &str,
+    agent_operation: &str,
+    function_pass: for<'a> fn(&'a str) -> &'static str,
+) -> String {
+    let llm_response: String =
+        ai_task_request(msg_context, agent_position, agent_operation, function_pass).await;
+    
+    let markdown_regex: Regex = Regex::new(r"(^```.*(\r\n|\r|\n)|```\s*$)").unwrap();
+    let llm_result = markdown_regex.replace_all( llm_response.as_ref(),"");
+    dbg!(llm_result.to_string());
+    return llm_result.to_string();
+}
+
 // perform call to LLM GPT
 pub async fn ai_task_request(
     msg_context: String,
@@ -62,7 +81,10 @@ pub async fn ai_task_request(
 
     // return success or try again
     match llm_result {
-        Ok(llm_response) => llm_response,
+        Ok(llm_response) => {
+            // remove markdown from response
+            llm_response
+        },
         Err(_) => call_gpt(vec![extended_msg.clone()])
             .await
             .expect("Failed to call LLM"),
@@ -78,6 +100,12 @@ pub async fn check_status_code(client: &Client, url: &str) -> Result<u16, reqwes
 // get code template
 pub fn read_code_template_contents() -> String {
     let path: String = String::from(CODE_TEMPLATE_PATH);
+    fs::read_to_string(path).expect("Failed to read code template")
+}
+
+// get executable code
+pub fn read_exec_main_contents() -> String {
+    let path: String = String::from(EXEC_MAIN_PATH);
     fs::read_to_string(path).expect("Failed to read code template")
 }
 
