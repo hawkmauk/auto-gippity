@@ -214,6 +214,7 @@ impl SpecialFunctions for AgentBackendDeveloper {
                      */
                     let api_endpoints_str = self.call_extract_api_endpoints().await;
 
+                    dbg!(api_endpoints_str.as_str());
                     //convert api endpoints into values
                     let api_endpoints: Vec<RouteObject> =
                         serde_json::from_str(api_endpoints_str.as_str())
@@ -222,7 +223,7 @@ impl SpecialFunctions for AgentBackendDeveloper {
                     let check_endpoints: Vec<RouteObject> = api_endpoints
                         .iter()
                         .filter(|&route_object| {
-                            route_object.method == "get" && route_object.is_route_dynamic == false
+                            route_object.method == "get" && route_object.is_route_dynamic == "false"
                         })
                         .cloned()
                         .collect();
@@ -270,7 +271,7 @@ impl SpecialFunctions for AgentBackendDeveloper {
                             .unwrap();
 
                         // test url
-                        let url_string = format!("http://localhost:8080{}", endpoint.route);
+                        let url_string = format!("http://localhost:6678{}", endpoint.route);
                         match check_status_code(&client, &url_string).await {
 
                             Ok(status_code) => {
@@ -335,7 +336,7 @@ mod tests {
         let mut agent = AgentBackendDeveloper::new();
 
         let factsheet_str: &str = r#"{
-        "project_description": "build a website that fetches and tracks fitness progress with timezone information",
+        "project_description": "build a website with user login and logout that stores addresses and phone numbers of contacts",
         "project_scope": {
             "is_crud_required": true,
             "is_user_login_and_logout": true,

@@ -1,0 +1,80 @@
+[
+  {
+    "route": "/contact",
+    "is_route_dynamic": "false",
+    "method": "post",
+    "request_body": {
+      "id": "number",
+      "user_id": "number",
+      "address": "string",
+      "phone_number": "string"
+    },
+    "response": "None"
+  },
+  {
+    "route": "/contact",
+    "is_route_dynamic": "false",
+    "method": "get",
+    "request_body": "None",
+    "response": [
+      {
+        "id": "number",
+        "user_id": "number",
+        "address": "string",
+        "phone_number": "string"
+      }
+    ]
+  },
+  {
+    "route": "/contact/{id}",
+    "is_route_dynamic": "true",
+    "method": "get",
+    "request_body": "None",
+    "response": {
+      "id": "number",
+      "user_id": "number",
+      "address": "string",
+      "phone_number": "string"
+    }
+  },
+  {
+    "route": "/contact",
+    "is_route_dynamic": "false",
+    "method": "put",
+    "request_body": {
+      "id": "number",
+      "user_id": "number",
+      "address": "string",
+      "phone_number": "string"
+    },
+    "response": "None"
+  },
+  {
+    "route": "/contact/{id}",
+    "is_route_dynamic": "true",
+    "method": "delete",
+    "request_body": "None",
+    "response": "None"
+  },
+  {
+    "route": "/register",
+    "is_route_dynamic": "false",
+    "method": "post",
+    "request_body": {
+      "id": "number",
+      "username": "string",
+      "password": "string"
+    },
+    "response": "None"
+  },
+  {
+    "route": "/login",
+    "is_route_dynamic": "false",
+    "method": "post",
+    "request_body": {
+      "username": "string",
+      "password": "string"
+    },
+    "response": "Logged in user or Invalid username or password"
+  }
+]

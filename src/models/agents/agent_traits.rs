@@ -12,7 +12,7 @@ pub struct ProjectScope {
 
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct RouteObject {
-    pub is_route_dynamic: bool,
+    pub is_route_dynamic: String,
     pub method: String,
     pub request_body: serde_json::Value,
     pub response: serde_json::Value,

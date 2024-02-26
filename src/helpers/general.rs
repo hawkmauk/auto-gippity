@@ -60,7 +60,6 @@ pub async fn ai_task_request_without_markdown(
     
     let markdown_regex: Regex = Regex::new(r"(^```.*(\r\n|\r|\n)|```\s*$)").unwrap();
     let llm_result = markdown_regex.replace_all( llm_response.as_ref(),"");
-    dbg!(llm_result.to_string());
     return llm_result.to_string();
 }
 
